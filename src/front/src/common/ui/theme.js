@@ -1,0 +1,21 @@
+export const theme = {
+  commonColor: '#003a5e',
+  lightColor: '#ffffff',
+  darkColor: '#000000',
+  darkerGrey: '#343434',
+  darkGrey: '#939393',
+  greyColor: '#858585',
+  lightGreyColor: '#DCDCDC',
+  primaryColor: '#0090e8',
+  secondaryColor: '#003a5e',
+  warningColor: '#f7c225',
+  backgroundColor: 'rgb(35, 35, 35)',
+  secondaryBackgroundColor: 'rgb(2, 30, 48)',
+  modalOverlayBackground: 'hsla(0, 0%, 0%, 0.5)',
+  borderRadius: '2px',
+  buttonBorderRadius: '4px',
+  primaryFont: "Brutal, 'Open Sans', 'Helvetica Neue', Arial, Helvetica, sans-serif",
+  widgetBackground: 'rgba(3, 54, 88, 0.3)',
+  widgetBoxShadow: '1px 2px 3px 1px rgba(0, 0, 0, 0.14)',
+  baseBackground: '#09151b'
+}
