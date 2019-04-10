@@ -5,7 +5,7 @@ import { darken, lighten } from 'polished'
 
 import { LandingPage } from './LandingPage'
 import { DocsPage } from './DocsPage'
-import { VisualizationPage } from './VisualizationPage'
+import VisualizationPage from './pages/visualization'
 import { SearchBar } from './SearchBar'
 import { PlayersPage } from './PlayersPage'
 import { Modal, PageWrapper } from 'common/ui'
