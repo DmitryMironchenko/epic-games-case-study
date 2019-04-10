@@ -1,5 +1,8 @@
 {
   "parser": "babel-eslint",
+  "plugins": [
+    "flowtype"
+  ],
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module",
@@ -38,7 +41,7 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended",
+    "plugin:react/recommended"
   ],
     "rules": {
     "default-case": 1,
@@ -73,6 +76,8 @@
     "react/prefer-es6-class": 1,
     "react/prop-types": 0,
     "react/prefer-stateless-function": 1,
-    "react/no-unescaped-entities": [1, { "forbid": [">", "}"] }]
+    "react/no-unescaped-entities": [1, { "forbid": [">", "}"] }],
+    "flowtype/define-flow-type": 1,
+    "flowtype/use-flow-type": 1
   }
 }

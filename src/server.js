@@ -6,6 +6,7 @@ import compression from 'compression'
 import { queryHandler } from './serverUtils'
 import { playerRouter } from './routes/players'
 import { gameRouter } from './routes/game'
+import { weaponRouter } from './routes/weapons'
 
 const app = express()
 
@@ -17,17 +18,10 @@ app.use(compression())
 /* eslint-disable-next-line */
 app.use(express.static(path.join(__dirname, 'front')))
 
-app.get('/api/weapons', (req, res) =>
-  queryHandler(
-    req,
-    res,
-    'SELECT weapon, COUNT(victim_guid) "kills" FROM player_kill GROUP BY weapon;'
-  )
-)
-
 app.use('/api/raw/', (req, res) => queryHandler(req, res, req.query.query))
 app.use('/api/players/', playerRouter)
 app.use('/api/game/', gameRouter)
+app.use('/api/weapons', weaponRouter)
 
 app.get('*', (req, res) => {
   /* eslint-disable-next-line */
