@@ -1,14 +1,15 @@
-import * as React from 'react'
-import styled from 'styled-components'
-import request from 'superagent'
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { solarizedDark } from 'react-syntax-highlighter/dist/styles/hljs'
-import { rgba } from 'polished'
+import _ from 'lodash';
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import request from 'superagent';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { solarizedDark } from 'react-syntax-highlighter/dist/styles/hljs';
+import { rgba } from 'polished';
 
-import { Loading } from 'common/ui/Icons'
-import { Modal, Scrollbars } from 'common/ui'
+import { Loading } from 'common/ui/Icons';
+import { Modal, Scrollbars, Table, Column } from 'common/ui';
 
-const Input = styled.input`
+const StyledInput = styled.input`
   box-shadow: ${p => p.theme.widgetBoxShadow};
   border: ${p => `1px solid ${p.theme.lightGreyColor}`};
   border-radius: ${p => p.theme.buttonBorderRadius};
@@ -17,6 +18,7 @@ const Input = styled.input`
   width: 100%;
   margin: auto;
   padding: 8px;
+  padding-right: 3.65rem;
   color: ${p => p.theme.lightGreyColor};
   text-align: center;
   &::placeholder {
@@ -25,78 +27,135 @@ const Input = styled.input`
   &:focus {
     box-shadow: 0 0 0px 3px #00d4fc;
   }
-`
+`;
 
-const DataContainer = styled.div`
+const StyledDataContainer = styled.div`
   overflow: auto;
   height: 600px;
   width: 100%;
-`
+`;
 
-const Form = styled.form`
+const StyledForm = styled.form`
+  position: relative;
   width: 65%;
   display: flex;
   height: 30px;
-  margin: auto;
-`
+  magin: auto;
+`;
 
-export class SearchBar extends React.Component {
-  state = {
-    queryData: null,
-    status: 'SUCCESS'
-  }
+const StyledHistoryButton = styled.a`
+  position: absolute;
 
-  fetchData = sql => {
-    this.setState({ status: 'REQUEST' })
-    request
-      .get('/api/raw')
-      .query({ query: sql })
-      .then(({ body: queryData }) => this.setState({ queryData, status: 'SUCCESS' }))
-  }
+  /* These are set relative to the height of the input box to bound the box neatly inside. This is aesthetic to me but you may change the dimensions of course. */
+  right: 0.3rem;
+  top: 0.3rem;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 0.3rem;
 
-  handleSubmit = e => {
-    e.preventDefault()
-    const { search } = e.target.elements
-    this.fetchData(search.value)
-  }
+  /* content in the icon div is centered, without bootstrap or font-awesome you may wish to add your own text in the span */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
 
-  render() {
-    const { queryData, status } = this.state
-    return (
-      <>
-        <Form onSubmit={this.handleSubmit}>
-          <Input
-            aria-label="sql-search"
-            id="sql-search"
-            name="search"
-            placeholder="QUERY SQLite DB"
-            autoComplete="false"
-            onKeyDown={e => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                this.fetchData(e.target.value)
-              }
-            }}
-          />
-        </Form>
-        {!queryData && status === 'REQUEST' && <Loading />}
-        {queryData && status !== 'REQUEST' && (
-          <Modal
-            open
-            width={1000}
-            header="Search Results"
-            onClose={() => this.setState({ queryData: null })}
+  border:none;
+  background: transparent;
+`;
+
+export const SearchBar = props => {
+  const [query, setQuery] = useState('');
+  const [queryData, setQueryData] = useState(null);
+  const [queryHistoryData, setQueryHistoryData] = useState([]);
+  const [status, setStatus] = useState('SUCCESS');
+
+  const handleSubmit = e => {
+    console.log('[INFO]: handleSubmit', status, query);
+    e.preventDefault();
+    return false;
+  };
+
+  useEffect(() => {
+    (async () => {
+      console.log('[INFO] useEffect: ', query, status);
+      if (!query || status !== 'REQUEST') return;
+
+      const { body } = await request
+        .get('/api/raw')
+        .query({ query });
+
+      setQueryData(body);
+      setStatus('SUCCESS');
+    })();
+  }, [query, status]);
+
+  useEffect(() => {
+    (async () => {
+      if (status !== 'HISTORY') return;
+      const { body } = await request.get('/api/raw/history');
+      setQueryHistoryData(body);
+    })();
+  }, [status, setQueryHistoryData.length]);
+
+  return (
+    <>
+      <StyledForm onSubmit={handleSubmit}>
+        <StyledInput
+          aria-label="sql-search"
+          id="sql-search"
+          name="search"
+          placeholder="QUERY SQLite DB"
+          autoComplete="off"
+          value={query}
+          onChange={e => {setQuery(e.target.value)}}
+          onKeyDown={(e => {
+            if (e.key === 'Enter') {
+              setStatus('REQUEST');
+
+              console.log('[INFO] enter hit', query, status);
+            }
+          }).bind(this)}
+        />
+        <StyledHistoryButton onClick={() => { console.log('[INFO]: history button onClick');setStatus('HISTORY') }}>H</StyledHistoryButton>
+      </StyledForm>
+      {!queryData && status === 'REQUEST' && <Loading />}
+      {queryData && status !== 'REQUEST' && (
+        <Modal
+          open
+          width={1000}
+          header="Search Results"
+          onClose={() => setQueryData(null)}
+        >
+          <StyledDataContainer>
+            <Scrollbars>
+              <SyntaxHighlighter language="json" style={solarizedDark}>
+                {JSON.stringify(queryData, undefined, '  ')}
+              </SyntaxHighlighter>
+            </Scrollbars>
+          </StyledDataContainer>
+        </Modal>
+      )}
+      {status === 'HISTORY' && (
+        <Modal
+          open
+          width={1000}
+          header="Query History"
+          onClose={() => {setStatus(null); setQueryData(null)}}
+        >
+          <Table
+            rowCount={queryHistoryData.length}
+            rowGetter={({ index }) => queryHistoryData[index]}
+            height={600}
+            rowHeight={40}
+            noRowsMessage="No history available"
+            onRowClick={({ event, index, rowData }) => {setQuery(rowData.query); setStatus('REQUEST')}}
           >
-            <DataContainer>
-              <Scrollbars>
-                <SyntaxHighlighter language="json" style={solarizedDark}>
-                  {JSON.stringify(queryData, undefined, '  ')}
-                </SyntaxHighlighter>
-              </Scrollbars>
-            </DataContainer>
-          </Modal>
-        )}
-      </>
-    )
-  }
+            <Column width={80} dataKey="query_id" label="ID" />
+            <Column width={120} label="Query" dataKey="query" flexGrow={1} />
+          </Table>
+
+        </Modal>
+      )}
+    </>
+  );
 }

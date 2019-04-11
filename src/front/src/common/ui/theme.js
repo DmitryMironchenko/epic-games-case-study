@@ -11,7 +11,7 @@ export const theme = {
   warningColor: '#f7c225',
   backgroundColor: 'rgb(35, 35, 35)',
   secondaryBackgroundColor: 'rgb(2, 30, 48)',
-  modalOverlayBackground: 'hsla(0, 0%, 0%, 0.5)',
+  modalOverlayBackground: 'hsla(0, 0%, 0%, 0.7)',
   borderRadius: '2px',
   buttonBorderRadius: '4px',
   primaryFont: "Brutal, 'Open Sans', 'Helvetica Neue', Arial, Helvetica, sans-serif",

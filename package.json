@@ -9,6 +9,8 @@
     "dev": "node start.js"
   },
   "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.4.3",
+    "@babel/runtime": "^7.4.3",
     "@reach/dialog": "^0.1.2",
     "body-parser": "^1.18.3",
     "compression": "^1.7.3",
@@ -17,9 +19,9 @@
     "lodash": "^4.17.11",
     "polished": "^2.3.0",
     "query-string": "^6.2.0",
-    "react": "^16.6.3",
+    "react": "^16.8.6",
     "react-custom-scrollbars": "^4.2.1",
-    "react-dom": "^16.6.3",
+    "react-dom": "^16.8.6",
     "react-router-dom": "^4.3.1",
     "react-select": "^2.1.1",
     "react-sizeme": "^2.5.2",
