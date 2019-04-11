@@ -10,6 +10,7 @@ import { SearchBar } from './SearchBar'
 import { PlayersPage } from './PlayersPage'
 import { Modal, PageWrapper } from 'common/ui'
 import { DataReportIcon, ChartsIcon, PlayersIcon } from 'common/ui/Icons'
+import { media } from 'common/utils';
 
 const Page = styled.div`
   display: flex;
@@ -17,6 +18,8 @@ const Page = styled.div`
   height: 100%;
   width: 100%;
   align-items: center;
+  ${media.phone`flex: 1 100%;`}
+  ${media.tablet`flex: 1 100%;`}
 `
 
 const grow = keyframes`
@@ -46,6 +49,8 @@ const Tip = styled.div`
     padding: 2px;
     border-radius: ${p => p.theme.borderRadius};
   }
+  ${media.phone`bottom: 50px;`}
+  ${media.tablet`bottom: 50px;`}
 `
 
 const StyledLink = styled(Link)`
@@ -87,6 +92,22 @@ const Sidebar = styled.div`
       color: ${p => lighten(0.35, p.theme.secondaryColor)};
     }
   }
+
+  ${media.phone`
+    height: 50px;
+    width: 100%;
+    flex: 1 100%;
+    overflow: hidden;
+    flex-direction: row;
+  `}
+
+  ${media.tablet`
+    height: 50px;
+    width: 100%;
+    flex: 1 100%;
+    overflow: hidden;
+    flex-direction: row;
+  `}
 `
 
 const Header = styled.div`
@@ -103,11 +124,16 @@ const Header = styled.div`
     max-height: 30px;
     margin: 0;
   }
+  ${media.phone`margin-top: 50px;`}
+  ${media.tablet`margin-top: 50px;`}
 `
 
 const SidebarLink = styled(NavLink).attrs({
   activeClassName: 'active'
-})``
+})`
+  ${media.phone`flex: 20% 0;`}
+  ${media.tablet`flex: 20% 0;`}
+`;
 
 export class IndexPage extends React.Component {
   state = {

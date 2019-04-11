@@ -2,6 +2,8 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { rgba } from 'polished'
 
+import { media } from '../utils';
+
 const Background = styled.div`
   content: '';
   position: absolute;
@@ -45,6 +47,8 @@ const PageContent = styled.div`
   order: 0;
   overflow: hidden;
   position: relative;
+  ${media.phone`flex-flow: row wrap-reverse;`}
+  ${media.tablet`flex-flow: row wrap-reverse;`}
 `
 
 export const PageWrapper = ({ children }) => (

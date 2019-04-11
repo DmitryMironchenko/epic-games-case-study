@@ -46,6 +46,7 @@ const StyledForm = styled.form`
 const StyledHistoryButton = styled.a`
   position: absolute;
 
+  cursor: pointer;
   /* These are set relative to the height of the input box to bound the box neatly inside. This is aesthetic to me but you may change the dimensions of course. */
   right: 0.3rem;
   top: 0.3rem;
@@ -63,6 +64,11 @@ const StyledHistoryButton = styled.a`
   background: transparent;
 `;
 
+// This one was added to fix positioning of a table inside modal. It was not vertically aligned well.
+const SyledTableContainer = styled.div`
+  height: 600px;
+`;
+
 export const SearchBar = props => {
   const [query, setQuery] = useState('');
   const [queryData, setQueryData] = useState(null);
@@ -70,14 +76,12 @@ export const SearchBar = props => {
   const [status, setStatus] = useState('SUCCESS');
 
   const handleSubmit = e => {
-    console.log('[INFO]: handleSubmit', status, query);
     e.preventDefault();
     return false;
   };
 
   useEffect(() => {
     (async () => {
-      console.log('[INFO] useEffect: ', query, status);
       if (!query || status !== 'REQUEST') return;
 
       const { body } = await request
@@ -142,18 +146,22 @@ export const SearchBar = props => {
           header="Query History"
           onClose={() => {setStatus(null); setQueryData(null)}}
         >
-          <Table
-            rowCount={queryHistoryData.length}
-            rowGetter={({ index }) => queryHistoryData[index]}
-            height={600}
-            rowHeight={40}
-            noRowsMessage="No history available"
-            onRowClick={({ event, index, rowData }) => {setQuery(rowData.query); setStatus('REQUEST')}}
-          >
-            <Column width={80} dataKey="query_id" label="ID" />
-            <Column width={120} label="Query" dataKey="query" flexGrow={1} />
-          </Table>
-
+          <SyledTableContainer>
+            <Table
+              rowCount={queryHistoryData.length}
+              rowGetter={({ index }) => queryHistoryData[index]}
+              height={600}
+              rowHeight={40}
+              windowScroller
+              onResize={({ height, width }) => {console.log('[INFO]: onResizzzze', width, height)}}
+              noRowsMessage="No history available"
+              rowStyle={{cursor: 'pointer'}}
+              onRowClick={({ event, index, rowData }) => {setQuery(rowData.query); setStatus('REQUEST')}}
+            >
+              <Column width={80} dataKey="query_id" label="ID" />
+              <Column width={120} label="Query" dataKey="query" flexGrow={1} />
+            </Table>
+          </SyledTableContainer>
         </Modal>
       )}
     </>
