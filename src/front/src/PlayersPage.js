@@ -1,17 +1,17 @@
-import * as React from 'react'
-import request from 'superagent'
-import { orderBy } from 'lodash'
-import { SortDirection } from 'react-virtualized'
-import styled from 'styled-components'
+import * as React from 'react';
+import request from 'superagent';
+import { orderBy } from 'lodash';
+import { SortDirection } from 'react-virtualized';
+import styled from 'styled-components';
 
-import { Select, Widget, PageHeader, Table, Column } from 'common/ui'
+import { Select, Widget, PageHeader, Table, Column } from 'common/ui';
 
-const options = ['beginner', 'intermediate', 'pro']
+const options = ['beginner', 'intermediate', 'pro'];
 
 const SelectWrapper = styled.div`
   width: 35%;
   margin: 17.5rem auto;
-`
+`;
 
 const PlayerTypeSelect = ({ handleChange, value, fluid }) => (
   <Select
@@ -21,8 +21,9 @@ const PlayerTypeSelect = ({ handleChange, value, fluid }) => (
     handleChange={handleChange}
     placeholder="Select player type"
     aria-label="select-player-type"
+    isSeachable="true"
   />
-)
+);
 
 export class PlayersPage extends React.Component {
   state = {
@@ -49,6 +50,7 @@ export class PlayersPage extends React.Component {
   }
 
   handleChange = value => {
+    console.log('[INFO] Player handleChange', value);
     const {
       match: { params },
       history

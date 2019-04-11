@@ -7,6 +7,7 @@ import { queryHandler } from './serverUtils'
 import { playerRouter } from './routes/players'
 import { gameRouter } from './routes/game'
 import { weaponRouter } from './routes/weapons'
+import { rawSqlRouter } from './routes/raw-sql'
 
 const app = express()
 
@@ -18,7 +19,7 @@ app.use(compression())
 /* eslint-disable-next-line */
 app.use(express.static(path.join(__dirname, 'front')))
 
-app.use('/api/raw/', (req, res) => queryHandler(req, res, req.query.query))
+app.use('/api/raw/', rawSqlRouter)
 app.use('/api/players/', playerRouter)
 app.use('/api/game/', gameRouter)
 app.use('/api/weapons', weaponRouter)
