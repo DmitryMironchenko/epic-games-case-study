@@ -5,7 +5,6 @@ import { db } from '../db'
 export const rawQueryBackdoor = async sql => {
   db.all(sql, (err, res) => {
     if (err) {
-      console.log(err.message);
       throw new Error(err.message);
     } else return res;
   });
@@ -14,7 +13,6 @@ export const rawQueryBackdoor = async sql => {
 const basicQuery = (sql, res) =>
   db.all(sql, (err, rows) => {
     if (err) {
-      console.log(err.message)
       res.json({ error: err.message })
     } else res.send(rows)
   })
