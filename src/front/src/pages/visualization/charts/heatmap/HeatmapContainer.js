@@ -13,8 +13,8 @@ const processHeatMapData = data =>
     }))
   }));
 
-const HeatmapContainer= ({ data }) => ((
-  <Heatmap data={processHeatMapData(data)} />
+const HeatmapContainer= ({ data, isLive }) => ((
+  <Heatmap data={processHeatMapData(data)} isLive={isLive}/>
 ));
 
 export default HeatmapContainer;

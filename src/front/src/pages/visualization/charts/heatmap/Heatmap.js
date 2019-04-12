@@ -24,10 +24,29 @@ export default class Heatmap extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.size !== this.props.size) {
+    if (!this.props.isLive && prevProps.size !== this.props.size) {
       this.drawMap()
       this.drawPlayers()
     }
+
+    if (this.props.isLive && this.props.data[0].frameNumber !== prevProps.frameNumber) {
+      this.clearPlayers();
+      this.drawMap();
+      this.drawPlayers();
+      this.drawFrameInfo();
+    }
+  }
+
+  drawFrameInfo = () => {
+    var ctx = this.text.getContext('2d');
+    ctx.clearRect(0, 0, this.text.width, this.text.height);
+    ctx.font = `16px Brutal,'Open Sans','Helvetica Neue',Arial,Helvetica,sans-serif`;
+    ctx.fillStyle = '#DCDCDC';
+    ctx.fillText(`Frame: ${this.props.data[0].frameNumber}`, 10, 20);
+  }
+
+  clearPlayers = () => {
+    this.players.getContext('2d').clearRect(0, 0, this.players.width, this.players.height);
   }
 
   drawMap = () => {
@@ -97,7 +116,7 @@ export default class Heatmap extends React.Component {
     const context = this.players.getContext('2d')
     data.forEach(data => {
       data.frames.forEach(frame => {
-        context.fillStyle = rgba(frame.color, 0.25)
+        context.fillStyle = rgba(frame.color, this.props.isLive ? 1 : 0.25)
         context.beginPath()
         context.arc(
           scaleWidth(get(frame, 'x'), 0),
@@ -120,6 +139,12 @@ export default class Heatmap extends React.Component {
           width={800}
           height={700}
           ref={ref => (this.players = ref)}
+          style={{ position: 'absolute', left: 0 }}
+        />
+        <canvas
+          width={800}
+          height={700}
+          ref={ref => (this.text = ref)}
           style={{ position: 'absolute', left: 0 }}
         />
       </>

@@ -3,7 +3,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { ThemeProvider, createGlobalStyle } from 'styled-components'
 import { rgba, normalize } from 'polished'
 
-import { IndexPage } from './IndexPage'
+import { IndexPage } from './pages'
 import { theme } from 'common/ui/theme'
 
 const DefaultStyles = createGlobalStyle`
